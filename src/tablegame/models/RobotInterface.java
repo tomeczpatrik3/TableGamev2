@@ -39,4 +39,6 @@ public interface RobotInterface {
     void performAction(Position pos);
     
     void whoAmI();
+    
+    int getSteps();
 }

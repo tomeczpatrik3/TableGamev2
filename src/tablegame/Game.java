@@ -36,6 +36,7 @@ public class Game {
     private int maxRound;
     private int roundCnt;
     
+    
     public Game(int n, int m, String aClassName, String bClassName, int maxRound) {
         try {
             this.maxRound = maxRound;
@@ -119,18 +120,17 @@ public class Game {
             roundCnt = 0;
             boolean atLeastOneIsDead = false;
             
-            //
-            Scanner sc = new Scanner(System.in);
             /*
                 A játék addig tart amíg el nem jutunk egy adott körig (maxRound)
                 vagy valaki nem győz
             */
             while (!atLeastOneIsDead && roundCnt <= this.maxRound) {                    
-                //Robotok léptetése:
-                
+                //Robotok léptetése (ha a lépéseik száma megegyezik az eltelt körök számával):
                 if (roundCnt != 0) {
-                    ((RobotInterface)aRobot).performAction( getActualPosition(bRobot) );
-                    ((RobotInterface)bRobot).performAction( getActualPosition(aRobot) );
+                    if ( ((RobotInterface)aRobot).getSteps() == this.roundCnt )
+                        ((RobotInterface)aRobot).performAction( getActualPosition(bRobot) );
+                    if ( ((RobotInterface)bRobot).getSteps() == this.roundCnt )
+                        ((RobotInterface)bRobot).performAction( getActualPosition(aRobot) );
                 }
                     
                 //Ellenorzés, elég közel állnak-e a robotok egymáshoz?
@@ -152,11 +152,10 @@ public class Game {
                 }
                 
                 //Sleep:
-                //TimeUnit.SECONDS.sleep(3);
+                TimeUnit.SECONDS.sleep(2);
                 if (roundCnt!=0)
                     log();
                 System.out.println();
-                sc.nextLine();
             }
             
             announceTheResult(textGraphics);

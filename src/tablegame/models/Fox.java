@@ -26,13 +26,15 @@ public class Fox implements RobotInterface{
     private final int damage = 1;
     //A robot státusza:
     private boolean isAlive;
+    //Megtett lépések száma:
+    private int steps;
     
     //Fox robot speciális attribútumai:
     
     //Maximum menekülő körök száma:
-    private final int maxRun = 3;    
+    private final int maxRun = 5;    
     //Az érték, hogy milyen messzire kell eltávolodnia a másik robottól:
-    private final int distance = 2;
+    private final int distance = 3;
     //Maximum rnd generálások száma:
     private final int maxRnd = 10;
     //Körök száma amíg menekült:
@@ -52,6 +54,7 @@ public class Fox implements RobotInterface{
         this.pos = pos;
         this.isAlive = true;
         this.battleMode = BattleMode.KÖZELEDÉS;
+        this.steps = 1; //Init is egy lépés
     }
       
     public Fox(String name, Arena arena, int x, int y, int armor) {
@@ -62,6 +65,7 @@ public class Fox implements RobotInterface{
         this.pos = new Position(x,y);
         this.isAlive = true;
         this.battleMode = BattleMode.KÖZELEDÉS;
+        this.steps = 1; //Init is egy lépés
     }
     
     /*
@@ -180,6 +184,14 @@ public class Fox implements RobotInterface{
     public boolean isAlive() {
         return this.isAlive;
     } 
+    
+    /*
+        Megtett lépések lekérdezése:
+    */
+    @Override
+    public int getSteps() {
+        return this.steps;
+    } 
    
     /*
         Az adott osztályra jellemző speciális cselekvés:
@@ -189,6 +201,8 @@ public class Fox implements RobotInterface{
     */
     @Override
     public void performAction(Position pos) { 
+        this.steps++;
+        
         switch (this.battleMode) {
             case KÖZELEDÉS:
                 this.lastAction = MOVE;
@@ -248,9 +262,37 @@ public class Fox implements RobotInterface{
     
     /*
         Távolodás egy adott pozíciótól, egy adott távolságra:
+        (Lépések generálása, addig amíg megfelelő lépést nem kapunk
+        (azaz távolodunk), vagy el nem érjük a maximum próbák számát)
     */
     public void getAwayFromAPositon() {
+        Position posClone = new Position(this.pos.getX(), this.pos.getY());
+        double minDistance = tablegame.utils.Position.distance(this.pos, this.enemyPos);
         
+        int cnt = 0;
+        
+        while ((cnt <= this.maxRnd && minDistance >= tablegame.utils.Position.distance(this.pos, this.enemyPos)) || !this.arena.isValidPosition(this.pos)) {
+            genRndMove(posClone);
+            cnt++;
+        }
+
+    }
+    
+    /*
+        Véletlenszerű lépés generálása:
+    */
+    public void genRndMove(Position posClone) {  
+        Random rnd = new Random();
+        int rndNum = rnd.nextInt(4);
+
+        System.out.println("----"+rndNum+"----");
+
+        switch(rndNum) {
+            case 0: this.pos = new Position(posClone.getX()+1, posClone.getY()); break;
+            case 1: this.pos = new Position(posClone.getX()-1, posClone.getY()); break;
+            case 2: this.pos = new Position(posClone.getX(), posClone.getY()+1); break;
+            case 3: this.pos = new Position(posClone.getX(), posClone.getY()-1); break;
+        }  
     }
     
     @Override

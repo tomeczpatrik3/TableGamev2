@@ -22,6 +22,8 @@ public class Wolf implements RobotInterface{
     private final int damage = 2;
     //A robot státusza:
     private boolean isAlive;
+    //Megtett lépsek száma:
+    private int steps;
     
     public Wolf(String name, Arena arena, Position pos, int armor) {
         this.name = name;
@@ -30,6 +32,7 @@ public class Wolf implements RobotInterface{
         this.actualArmor = armor;
         this.pos = pos;
         this.isAlive = true;
+        this.steps = 1; //Init is egy lépés
     }
     
     
@@ -40,6 +43,7 @@ public class Wolf implements RobotInterface{
         this.actualArmor = armor;
         this.pos = new Position(x,y);
         this.isAlive = true;
+        this.steps = 1; //Init is egy lépés
     }
     
     /*
@@ -160,11 +164,21 @@ public class Wolf implements RobotInterface{
     }
     
     /*
+        Megtett lépések lekérdezése:
+    */
+    @Override
+    public int getSteps() {
+        return this.steps;
+    } 
+    
+    /*
         Az adott osztályra jellemző speciális cselekvés:
         "Közeledik az ellenfélhez, majd folyamatosan támad, míg ő vagy a másik ki nem nyúlik"
     */
     @Override
     public void performAction(Position pos) {
+        this.steps++;
+        
         if ( tablegame.utils.Position.distance(this.pos, pos) == 1 ) {
             //Támadás
             this.lastAction = ATTACK;
