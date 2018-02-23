@@ -166,6 +166,9 @@ public abstract class Robot implements RobotInterface {
     @Override
     public int getSteps() {
         return this.steps;
-    } 
-       
+    }
+    
+    @Override
+    public abstract void performAction(Position pos);  
+    
 }
