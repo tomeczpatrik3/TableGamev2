@@ -5,11 +5,9 @@ import com.googlecode.lanterna.TextColor;
 import com.googlecode.lanterna.graphics.TextGraphics;
 import com.googlecode.lanterna.terminal.DefaultTerminalFactory;
 import com.googlecode.lanterna.terminal.Terminal;
-import com.googlecode.lanterna.terminal.swing.SwingTerminalFrame;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import static tablegame.enums.Action.*;

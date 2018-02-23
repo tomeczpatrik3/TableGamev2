@@ -1,36 +1,13 @@
 package tablegame.models;
 
 import java.util.Random;
-import tablegame.enums.Action;
 import static tablegame.enums.Action.ATTACK;
 import static tablegame.enums.Action.DEFEND;
 import static tablegame.enums.Action.MOVE;
 import tablegame.utils.Position;
 
-public class Fox implements RobotInterface{
+public final class Fox extends Robot{
     public enum BattleMode { KÖZELEDÉS, VÉDEKEZÉS, TÁMADÁS, MENEKÜLÉS };
-
-    //A robot nevének tárolására:
-    private String name;
-    //A robot utolsó végrehajtott akciója:
-    private Action lastAction;
-    //A robot jelenlegi pozíciója:
-    private Position pos;
-    //Az aréna, amiben a robot szerepel:
-    private Arena arena;
-    //A robot maximális páncélja:
-    private int maxArmor;
-    //A robot aktuális páncélja:
-    private int actualArmor;
-    //A robot sebzése:
-    private final int damage = 1;
-    //A robot státusza:
-    private boolean isAlive;
-    //Megtett lépések száma:
-    private int steps;
-    
-    //Fox robot speciális attribútumai:
-    
     //Maximum menekülő körök száma:
     private final int maxRun = 5;    
     //Az érték, hogy milyen messzire kell eltávolodnia a másik robottól:
@@ -47,152 +24,15 @@ public class Fox implements RobotInterface{
     private BattleMode battleMode;
     
     public Fox(String name, Arena arena, Position pos, int armor) {
-        this.name = name;
-        this.arena = arena;
-        this.maxArmor = armor;
-        this.actualArmor = armor;
-        this.pos = pos;
-        this.isAlive = true;
+        super(name, arena, pos, armor);
         this.battleMode = BattleMode.KÖZELEDÉS;
-        this.steps = 1; //Init is egy lépés
     }
       
     public Fox(String name, Arena arena, int x, int y, int armor) {
-        this.name = name;
-        this.arena = arena;
-        this.maxArmor = armor;
-        this.actualArmor = armor;
-        this.pos = new Position(x,y);
-        this.isAlive = true;
+        super(name, arena, x, y, armor);
         this.battleMode = BattleMode.KÖZELEDÉS;
-        this.steps = 1; //Init is egy lépés
     }
     
-    /*
-        Név lekérdezése
-    */
-    @Override
-    public String getName() {
-        return this.name;
-    }
-    
-    /*
-        Név beállítása
-    */
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    /*
-        Aktuális pozíció lekérdezése
-    */
-    @Override
-    public Position getActualPosition() {
-        return this.pos;
-    }
-    
-    /*
-        Aktuális pozíció beállítása
-    */
-    @Override
-    public void setActualPosition(int x, int y) {
-        this.pos.setX(x);
-        this.pos.setY(y);
-    }
-    
-    /*
-        Utolsó akció lekérdezése
-    */
-    @Override
-    public Action getLastAction() {
-        return this.lastAction;
-    }
-    
-    /*
-        Utolsó akció beállítása
-    */
-    @Override
-    public void setLastAction(Action act) {
-        this.lastAction = act;
-    }
-    
-    /*
-        Maximum páncél lekérdezése
-    */
-    @Override
-    public int getMaxArmor() {
-        return this.maxArmor;
-    }
-     
-    /*
-        Maximum páncél beállítása
-    */
-    @Override
-    public void setMaxArmor(int armor) {
-        this.maxArmor = armor;
-    }
-    
-    /*
-        Jelenlegi páncél lekérdezése
-    */
-    @Override
-    public int getActualArmor() {
-        return this.actualArmor;
-    }
-    
-    /*
-        Jelenlegi páncél beállítása, feltéve ha
-        nem haladja meg a maximális páncélt
-    */
-    @Override
-    public void setActualArmor(int armor) {
-        if (armor <= this.maxArmor )
-            this.actualArmor = armor;
-    }
-    
-    /*
-        Sebzés lekérdezése
-    */
-    @Override
-    public int getDmg(){
-        return this.damage;
-    }
-    
-    /*
-        Aréna méretének lekérdezése
-    */
-    @Override
-    public int[] getArenaSize() {
-        return this.arena.getSize();
-    }
-    
-    /*
-        Levonás a páncélból, ha páncél<=0, akkor a robot meghalt
-    */
-    @Override
-    public void sufferDmg(int dmg) {
-        this.actualArmor = this.actualArmor-dmg;
-        if (this.actualArmor <= 0)
-            this.isAlive = false;
-    }
-    
-    /*
-        Státusz lekérdezése:
-    */
-    @Override
-    public boolean isAlive() {
-        return this.isAlive;
-    } 
-    
-    /*
-        Megtett lépések lekérdezése:
-    */
-    @Override
-    public int getSteps() {
-        return this.steps;
-    } 
-   
     /*
         Az adott osztályra jellemző speciális cselekvés:
         "Amig a másik robot távol van tőle, addig közeledik hozzá, 
@@ -284,8 +124,6 @@ public class Fox implements RobotInterface{
     public void genRndMove(Position posClone) {  
         Random rnd = new Random();
         int rndNum = rnd.nextInt(4);
-
-        System.out.println("----"+rndNum+"----");
 
         switch(rndNum) {
             case 0: this.pos = new Position(posClone.getX()+1, posClone.getY()); break;
